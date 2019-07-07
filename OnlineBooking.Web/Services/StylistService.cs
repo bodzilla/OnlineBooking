@@ -7,16 +7,12 @@ using OnlineBooking.Web.Models;
 
 namespace OnlineBooking.Web.Services
 {
-    public class StylistService : IStylistService
+    public class StylistService : Database, IStylistService
     {
         private readonly IMongoCollection<Stylist> _stylists;
 
-        public StylistService(IOnlineBookingDatabaseSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            _stylists = database.GetCollection<Stylist>(settings.StylistsCollectionName);
-        }
+        public StylistService(IOnlineBookingDatabaseSettings settings) : base(settings)
+            => _stylists = Source.GetCollection<Stylist>(settings.StylistsCollectionName);
 
         public List<Stylist> GetAll() => _stylists.Find(x => true).ToList();
 
