@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  onlinebooking.web:
+    image: ${DOCKER_REGISTRY-}onlinebookingweb
+    build:
+      context: .
+      dockerfile: OnlineBooking.Web/Dockerfile
