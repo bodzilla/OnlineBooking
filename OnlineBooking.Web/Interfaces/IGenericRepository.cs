@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using OnlineBooking.Web.Models;
 
 namespace OnlineBooking.Web.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAll();
 
-        IEnumerable<T> GetList(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetList(Expression<Func<T, bool>> predicate);
 
-        T Get(string id);
+        Task<T> Get(string id);
 
-        T Create(T entity);
+        Task<bool> Exists(string id);
 
-        void Update(string id, T entity);
+        Task<T> Create(T entity);
 
-        void Remove(string id);
+        Task<bool> Update(string id, T entity);
+
+        Task<bool> Remove(string id);
     }
 }

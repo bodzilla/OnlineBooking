@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using MongoDB.Driver;
 using OnlineBooking.Web.Interfaces;
 using OnlineBooking.Web.Models;
@@ -13,20 +14,30 @@ namespace OnlineBooking.Web.Repositories
 
         public GenericRepository(DbContext dbContext) => _collection = dbContext.Database.GetCollection<T>(typeof(T).Name);
 
-        public IEnumerable<T> GetAll() => _collection.Find(x => true).ToEnumerable();
+        public async Task<IEnumerable<T>> GetAll() => await _collection.Find(x => true).ToListAsync().ConfigureAwait(false);
 
-        public IEnumerable<T> GetList(Expression<Func<T, bool>> predicate) => _collection.Find(predicate).ToEnumerable();
+        public async Task<IEnumerable<T>> GetList(Expression<Func<T, bool>> predicate) => await _collection.Find(predicate).ToListAsync().ConfigureAwait(false);
 
-        public T Get(string id) => _collection.Find(x => x.Id.Equals(id)).FirstOrDefault();
+        public async Task<T> Get(string id) => await _collection.Find(x => x.Id.Equals(id)).FirstOrDefaultAsync().ConfigureAwait(false);
 
-        public T Create(T entity)
+        public async Task<bool> Exists(string id) => await Get(id).ConfigureAwait(false) != null;
+
+        public async Task<T> Create(T entity)
         {
-            _collection.InsertOne(entity);
+            await _collection.InsertOneAsync(entity).ConfigureAwait(false);
             return entity;
         }
 
-        public void Update(string id, T entity) => _collection.ReplaceOne(x => x.Id.Equals(id), entity);
+        public async Task<bool> Update(string id, T entity)
+        {
+            var result = await _collection.ReplaceOneAsync(x => x.Id.Equals(id), entity).ConfigureAwait(false);
+            return result.IsAcknowledged;
+        }
 
-        public void Remove(string id) => _collection.DeleteOne(x => x.Id.Equals(id));
+        public async Task<bool> Remove(string id)
+        {
+            var result = await _collection.DeleteOneAsync(x => x.Id.Equals(id)).ConfigureAwait(false);
+            return result.IsAcknowledged;
+        }
     }
 }

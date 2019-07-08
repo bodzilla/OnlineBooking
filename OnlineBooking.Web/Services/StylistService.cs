@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using OnlineBooking.Web.Interfaces;
 using OnlineBooking.Web.Models;
 
@@ -12,16 +13,18 @@ namespace OnlineBooking.Web.Services
 
         public StylistService(IStylistRepository repository) => _repository = repository;
 
-        public IEnumerable<Stylist> GetAll() => _repository.GetAll();
+        public async Task<IEnumerable<Stylist>> GetAll() => await _repository.GetAll().ConfigureAwait(false);
 
-        public IEnumerable<Stylist> GetList(Expression<Func<Stylist, bool>> predicate) => _repository.GetList(predicate);
+        public async Task<IEnumerable<Stylist>> GetList(Expression<Func<Stylist, bool>> predicate) => await _repository.GetList(predicate).ConfigureAwait(false);
 
-        public Stylist Get(string id) => _repository.Get(id);
+        public async Task<Stylist> Get(string id) => await _repository.Get(id).ConfigureAwait(false);
 
-        public Stylist Create(Stylist stylist) => _repository.Create(stylist);
+        public async Task<bool> Exists(string id) => await _repository.Exists(id).ConfigureAwait(false);
 
-        public void Update(string id, Stylist stylist) => _repository.Update(id, stylist);
+        public async Task<Stylist> Create(Stylist stylist) => await _repository.Create(stylist).ConfigureAwait(false);
 
-        public void Remove(string id) => _repository.Remove(id);
+        public async Task<bool> Update(string id, Stylist stylist) => await _repository.Update(id, stylist).ConfigureAwait(false);
+
+        public async Task<bool> Remove(string id) => await _repository.Remove(id).ConfigureAwait(false);
     }
 }
