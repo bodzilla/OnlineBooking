@@ -27,8 +27,7 @@ namespace OnlineBooking.Web.Controllers
         public async Task<ActionResult<Stylist>> GetAsync(string id)
         {
             var stylist = await _service.GetAsync(id).ConfigureAwait(false);
-            if (stylist != null) return stylist;
-            return NotFound();
+            return stylist != null ? (ActionResult<Stylist>)stylist : NotFound();
         }
 
         [HttpPost]
