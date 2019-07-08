@@ -17,11 +17,7 @@ namespace OnlineBooking.Web.Controllers
         public StylistsController(IStylistService service) => _service = service;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Stylist>>> GetAllAsync()
-        {
-            var stylists = await _service.GetAllAsync().ConfigureAwait(false);
-            return stylists.ToList();
-        }
+        public async Task<ActionResult<IEnumerable<Stylist>>> GetAllAsync() => (await _service.GetAllAsync().ConfigureAwait(false)).ToList();
 
         [HttpGet("{id:length(24)}", Name = "GetStylist")]
         public async Task<ActionResult<Stylist>> GetAsync(string id)
