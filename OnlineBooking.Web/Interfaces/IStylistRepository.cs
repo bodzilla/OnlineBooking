@@ -5,7 +5,7 @@ using OnlineBooking.Web.Models;
 
 namespace OnlineBooking.Web.Interfaces
 {
-    public interface IStylistService
+    public interface IStylistRepository
     {
         IEnumerable<Stylist> GetAll();
 
@@ -13,9 +13,9 @@ namespace OnlineBooking.Web.Interfaces
 
         Stylist Get(string id);
 
-        Stylist Create(Stylist stylist);
+        Stylist Create(Stylist entity);
 
-        void Update(string id, Stylist stylist);
+        void Update(string id, Stylist entity);
 
         void Remove(string id);
     }

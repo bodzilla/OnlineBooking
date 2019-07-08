@@ -1,9 +1,7 @@
 ﻿namespace OnlineBooking.Web.Interfaces
 {
-    public interface IOnlineBookingDatabaseSettings
+    public interface IDbContextSettings
     {
-        string StylistsCollectionName { get; set; }
-
         string ConnectionString { get; set; }
 
         string DatabaseName { get; set; }

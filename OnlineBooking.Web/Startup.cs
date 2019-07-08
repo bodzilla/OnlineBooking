@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OnlineBooking.Web.Interfaces;
 using OnlineBooking.Web.Models;
+using OnlineBooking.Web.Repositories;
 using OnlineBooking.Web.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -20,8 +21,10 @@ namespace OnlineBooking.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRouting(x => x.LowercaseUrls = true);
-            services.Configure<OnlineBookingDatabaseSettings>(Configuration.GetSection(nameof(OnlineBookingDatabaseSettings)));
-            services.AddSingleton<IOnlineBookingDatabaseSettings>(x => x.GetRequiredService<IOptions<OnlineBookingDatabaseSettings>>().Value);
+            services.Configure<DbContextSettings>(Configuration.GetSection(nameof(DbContextSettings)));
+            services.AddSingleton<IDbContextSettings>(x => x.GetRequiredService<IOptions<DbContextSettings>>().Value);
+            services.AddSingleton<DbContext>();
+            services.AddSingleton<IStylistRepository, StylistRepository>();
             services.AddSingleton<IStylistService, StylistService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(x => { x.SwaggerDoc("v1", new Info { Title = "Online Booking", Version = "v1" }); });

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBooking.Web.Interfaces;
 using OnlineBooking.Web.Models;
@@ -14,7 +15,7 @@ namespace OnlineBooking.Web.Controllers
         public StylistsController(IStylistService service) => _service = service;
 
         [HttpGet]
-        public ActionResult<IEnumerable<Stylist>> GetAll() => _service.GetAll();
+        public ActionResult<IEnumerable<Stylist>> GetAll() => _service.GetAll().ToList();
 
         [HttpGet("{id:length(24)}", Name = "GetStylist")]
         public ActionResult<Stylist> Get(string id)

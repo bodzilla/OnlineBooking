@@ -1,35 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using MongoDB.Driver;
 using OnlineBooking.Web.Interfaces;
 using OnlineBooking.Web.Models;
 
 namespace OnlineBooking.Web.Services
 {
-    public class StylistService : Database, IStylistService
+    public class StylistService : IStylistService
     {
-        private readonly IMongoCollection<Stylist> _stylists;
+        private readonly IStylistRepository _repository;
 
-        public StylistService(IOnlineBookingDatabaseSettings settings) : base(settings)
-            => _stylists = Source.GetCollection<Stylist>(settings.StylistsCollectionName);
+        public StylistService(IStylistRepository repository) => _repository = repository;
 
-        public List<Stylist> GetAll() => _stylists.Find(x => true).ToList();
+        public IEnumerable<Stylist> GetAll() => _repository.GetAll();
 
-        public List<Stylist> GetList(Expression<Func<Stylist, bool>> predicate) => _stylists.Find(predicate).ToList();
+        public IEnumerable<Stylist> GetList(Expression<Func<Stylist, bool>> predicate) => _repository.GetList(predicate);
 
-        public Stylist Get(string id) => _stylists.Find(x => x.Id == id).FirstOrDefault();
+        public Stylist Get(string id) => _repository.Get(id);
 
-        public Stylist Create(Stylist stylist)
-        {
-            _stylists.InsertOne(stylist);
-            return stylist;
-        }
+        public Stylist Create(Stylist stylist) => _repository.Create(stylist);
 
-        public void Update(string id, Stylist stylist) => _stylists.ReplaceOne(x => x.Id == id, stylist);
+        public void Update(string id, Stylist stylist) => _repository.Update(id, stylist);
 
-        public void Remove(Stylist stylist) => _stylists.DeleteOne(x => x.Id == stylist.Id);
-
-        public void Remove(string id) => _stylists.DeleteOne(x => x.Id == id);
+        public void Remove(string id) => _repository.Remove(id);
     }
 }
