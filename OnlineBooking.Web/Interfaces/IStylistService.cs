@@ -8,18 +8,18 @@ namespace OnlineBooking.Web.Interfaces
 {
     public interface IStylistService
     {
-        Task<IEnumerable<Stylist>> GetAll();
+        Task<IEnumerable<Stylist>> GetAllAsync();
 
-        Task<IEnumerable<Stylist>> GetList(Expression<Func<Stylist, bool>> predicate);
+        Task<IEnumerable<Stylist>> GetListAsync(Expression<Func<Stylist, bool>> predicate);
 
-        Task<Stylist> Get(string id);
+        Task<Stylist> GetAsync(string id);
 
-        Task<bool> Exists(string id);
+        Task<bool> ExistsAsync(string id);
 
-        Task<Stylist> Create(Stylist entity);
+        Task<Stylist> CreateAsync(Stylist entity);
 
-        Task<bool> Update(string id, Stylist entity);
+        Task<bool> UpdateAsync(string id, Stylist entity);
 
-        Task<bool> Remove(string id);
+        Task<bool> DeleteAsync(string id);
     }
 }

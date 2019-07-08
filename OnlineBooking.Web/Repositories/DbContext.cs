@@ -7,7 +7,6 @@ namespace OnlineBooking.Web.Repositories
     {
         public readonly IMongoDatabase Database;
 
-        public DbContext(IDbContextSettings settings)
-            => Database = new MongoClient(settings.ConnectionString).GetDatabase(settings.DatabaseName);
+        public DbContext(IDbContextSettings settings) => Database = new MongoClient(settings.ConnectionString).GetDatabase(settings.DatabaseName);
     }
 }

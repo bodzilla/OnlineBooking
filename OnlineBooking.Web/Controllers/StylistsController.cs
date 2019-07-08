@@ -17,42 +17,42 @@ namespace OnlineBooking.Web.Controllers
         public StylistsController(IStylistService service) => _service = service;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Stylist>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Stylist>>> GetAllAsync()
         {
-            var stylists = await _service.GetAll().ConfigureAwait(false);
+            var stylists = await _service.GetAllAsync().ConfigureAwait(false);
             return stylists.ToList();
         }
 
         [HttpGet("{id:length(24)}", Name = "GetStylist")]
-        public async Task<ActionResult<Stylist>> Get(string id)
+        public async Task<ActionResult<Stylist>> GetAsync(string id)
         {
-            var stylist = await _service.Get(id).ConfigureAwait(false);
+            var stylist = await _service.GetAsync(id).ConfigureAwait(false);
             if (stylist == null) return NotFound();
             return stylist;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Stylist>> Create(Stylist stylist)
+        public async Task<ActionResult<Stylist>> CreateAsync(Stylist stylist)
         {
-            await _service.Create(stylist).ConfigureAwait(false);
+            await _service.CreateAsync(stylist).ConfigureAwait(false);
             return CreatedAtRoute("GetStylist", new { id = stylist.Id }, stylist);
         }
 
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, Stylist stylist)
+        public async Task<IActionResult> UpdateAsync(string id, Stylist stylist)
         {
-            var exists = await _service.Exists(id).ConfigureAwait(false);
+            var exists = await _service.ExistsAsync(id).ConfigureAwait(false);
             if (!exists) return NotFound();
-            var acknowledged = await _service.Update(id, stylist).ConfigureAwait(false);
+            var acknowledged = await _service.UpdateAsync(id, stylist).ConfigureAwait(false);
             return acknowledged ? NoContent() : new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [HttpDelete("{id:length(24)}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
-            var exists = await _service.Exists(id).ConfigureAwait(false);
+            var exists = await _service.ExistsAsync(id).ConfigureAwait(false);
             if (!exists) return NotFound();
-            var acknowledged = await _service.Remove(id).ConfigureAwait(false);
+            var acknowledged = await _service.DeleteAsync(id).ConfigureAwait(false);
             return acknowledged ? NoContent() : new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

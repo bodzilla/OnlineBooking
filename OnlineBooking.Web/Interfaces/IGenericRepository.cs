@@ -8,18 +8,18 @@ namespace OnlineBooking.Web.Interfaces
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
 
-        Task<IEnumerable<T>> GetList(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> predicate);
 
-        Task<T> Get(string id);
+        Task<T> GetAsync(string id);
 
-        Task<bool> Exists(string id);
+        Task<bool> ExistsAsync(string id);
 
-        Task<T> Create(T entity);
+        Task<T> CreateAsync(T entity);
 
-        Task<bool> Update(string id, T entity);
+        Task<bool> UpdateAsync(string id, T entity);
 
-        Task<bool> Remove(string id);
+        Task<bool> DeleteAsync(string id);
     }
 }

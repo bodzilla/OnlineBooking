@@ -13,18 +13,18 @@ namespace OnlineBooking.Web.Services
 
         public StylistService(IStylistRepository repository) => _repository = repository;
 
-        public async Task<IEnumerable<Stylist>> GetAll() => await _repository.GetAll().ConfigureAwait(false);
+        public async Task<IEnumerable<Stylist>> GetAllAsync() => await _repository.GetAllAsync().ConfigureAwait(false);
 
-        public async Task<IEnumerable<Stylist>> GetList(Expression<Func<Stylist, bool>> predicate) => await _repository.GetList(predicate).ConfigureAwait(false);
+        public async Task<IEnumerable<Stylist>> GetListAsync(Expression<Func<Stylist, bool>> predicate) => await _repository.GetListAsync(predicate).ConfigureAwait(false);
 
-        public async Task<Stylist> Get(string id) => await _repository.Get(id).ConfigureAwait(false);
+        public async Task<Stylist> GetAsync(string id) => await _repository.GetAsync(id).ConfigureAwait(false);
 
-        public async Task<bool> Exists(string id) => await _repository.Exists(id).ConfigureAwait(false);
+        public async Task<bool> ExistsAsync(string id) => await _repository.ExistsAsync(id).ConfigureAwait(false);
 
-        public async Task<Stylist> Create(Stylist stylist) => await _repository.Create(stylist).ConfigureAwait(false);
+        public async Task<Stylist> CreateAsync(Stylist stylist) => await _repository.CreateAsync(stylist).ConfigureAwait(false);
 
-        public async Task<bool> Update(string id, Stylist stylist) => await _repository.Update(id, stylist).ConfigureAwait(false);
+        public async Task<bool> UpdateAsync(string id, Stylist stylist) => await _repository.UpdateAsync(id, stylist).ConfigureAwait(false);
 
-        public async Task<bool> Remove(string id) => await _repository.Remove(id).ConfigureAwait(false);
+        public async Task<bool> DeleteAsync(string id) => await _repository.DeleteAsync(id).ConfigureAwait(false);
     }
 }
