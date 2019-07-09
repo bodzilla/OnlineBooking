@@ -33,9 +33,10 @@ namespace OnlineBooking.Web.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex, "Could not retrieve data.");
+                return InternalServerError(ex, "Failed to retrieve results.");
             }
-            return stylists != null && stylists.Any() ? (ActionResult<IEnumerable<Stylist>>)Ok(stylists) : NotFound();
+            if (stylists != null && stylists.Any()) return Ok(stylists);
+            return NotFoundWarning("No results found.");
         }
 
         [HttpGet("{id:length(24)}", Name = "GetStylist")]
@@ -48,9 +49,10 @@ namespace OnlineBooking.Web.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex, "Could not retrieve data. Id: {id}", id);
+                return InternalServerError(ex, "Failed to retrieve result. Id: {id}", id);
             }
-            return stylist != null ? (ActionResult<Stylist>)Ok(stylist) : NotFound();
+            if (stylist != null) return Ok(stylist);
+            return NotFoundWarning("No result found. Id: {id}", id);
         }
 
         [HttpPost]
@@ -62,7 +64,7 @@ namespace OnlineBooking.Web.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex, "Could not create. Stylist: {stylist}", stylist);
+                return InternalServerError(ex, "Failed to create item. Stylist: {stylist}", stylist);
             }
             return CreatedAtRoute("GetStylist", new { id = stylist.Id }, stylist);
         }
@@ -79,9 +81,9 @@ namespace OnlineBooking.Web.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex, "Update not acknowledged. Id: {id}, Stylist: {stylist}", id, stylist);
+                return InternalServerError(ex, "Failed to update item. Id: {id}, Stylist: {stylist}", id, stylist);
             }
-            return acknowledged ? NoContent() : new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            return acknowledged ? NoContent() : InternalServerError("Update not acknowledged. Id: {id}, Stylist: {stylist}", id, stylist);
         }
 
         [HttpDelete("{id:length(24)}")]
@@ -96,15 +98,27 @@ namespace OnlineBooking.Web.Controllers
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex, "Delete not acknowledged. Id: {id}", id);
+                return InternalServerError(ex, "Failed to delete item. Id: {id}", id);
             }
-            return acknowledged ? NoContent() : new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            return acknowledged ? NoContent() : InternalServerError("Delete not acknowledged. Id: {id}", id);
         }
 
         private StatusCodeResult InternalServerError(Exception ex, string message, params Object[] args)
         {
             _logger.LogError(ex, message, args);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        private StatusCodeResult InternalServerError(string message, params Object[] args)
+        {
+            _logger.LogError(message, args);
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        private NotFoundResult NotFoundWarning(string message, params Object[] args)
+        {
+            _logger.LogWarning(message, args);
+            return NotFound();
         }
     }
 }
