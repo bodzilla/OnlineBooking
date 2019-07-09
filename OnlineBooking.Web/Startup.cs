@@ -22,10 +22,10 @@ namespace OnlineBooking.Web
         {
             services.AddRouting(x => x.LowercaseUrls = true);
             services.Configure<DbContextSettings>(Configuration.GetSection(nameof(DbContextSettings)));
-            services.AddSingleton<IDbContextSettings>(x => x.GetRequiredService<IOptions<DbContextSettings>>().Value);
-            services.AddSingleton<DbContext>();
-            services.AddSingleton<IStylistRepository, StylistRepository>();
-            services.AddSingleton<IStylistService, StylistService>();
+            services.AddTransient<IDbContextSettings>(x => x.GetRequiredService<IOptions<DbContextSettings>>().Value);
+            services.AddTransient<DbContext>();
+            services.AddTransient<IStylistRepository, StylistRepository>();
+            services.AddTransient<IStylistService, StylistService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(x => { x.SwaggerDoc("v1", new Info { Title = "Online Booking", Version = "v1" }); });
         }
