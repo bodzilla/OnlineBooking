@@ -12,15 +12,15 @@ namespace OnlineBooking.Web.Repositories
     {
         private readonly IMongoCollection<T> _collection;
 
-        public GenericRepository(DbContext dbContext) => _collection = dbContext.Database.GetCollection<T>(typeof(T).Name);
+        public GenericRepository(DbContext context) => _collection = context.Database.GetCollection<T>(typeof(T).Name);
 
         public async Task<IEnumerable<T>> GetAllAsync() => await _collection.Find(x => true).ToListAsync().ConfigureAwait(false);
 
         public async Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> predicate) => await _collection.Find(predicate).ToListAsync().ConfigureAwait(false);
 
-        public async Task<T> GetAsync(string id) => await _collection.Find(x => x.Id.Equals(id)).FirstOrDefaultAsync().ConfigureAwait(false);
+        public async Task<T> GetAsync(Expression<Func<T, bool>> predicate) => await _collection.Find(predicate).FirstOrDefaultAsync().ConfigureAwait(false);
 
-        public async Task<bool> ExistsAsync(string id) => await GetAsync(id).ConfigureAwait(false) != null;
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate) => await GetAsync(predicate).ConfigureAwait(false) != null;
 
         public async Task<T> CreateAsync(T entity)
         {

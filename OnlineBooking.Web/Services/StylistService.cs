@@ -17,9 +17,9 @@ namespace OnlineBooking.Web.Services
 
         public async Task<IEnumerable<Stylist>> GetListAsync(Expression<Func<Stylist, bool>> predicate) => await _repository.GetListAsync(predicate).ConfigureAwait(false);
 
-        public async Task<Stylist> GetAsync(string id) => await _repository.GetAsync(id).ConfigureAwait(false);
+        public async Task<Stylist> GetAsync(string id) => await _repository.GetAsync(x => x.Id.Equals(id)).ConfigureAwait(false);
 
-        public async Task<bool> ExistsAsync(string id) => await _repository.ExistsAsync(id).ConfigureAwait(false);
+        public async Task<bool> ExistsAsync(string id) => await _repository.ExistsAsync(x => x.Id.Equals(id)).ConfigureAwait(false);
 
         public async Task<Stylist> CreateAsync(Stylist stylist) => await _repository.CreateAsync(stylist).ConfigureAwait(false);
 

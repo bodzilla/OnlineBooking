@@ -12,9 +12,9 @@ namespace OnlineBooking.Web.Interfaces
 
         Task<IEnumerable<Stylist>> GetListAsync(Expression<Func<Stylist, bool>> predicate);
 
-        Task<Stylist> GetAsync(string id);
+        Task<Stylist> GetAsync(Expression<Func<Stylist, bool>> predicate);
 
-        Task<bool> ExistsAsync(string id);
+        Task<bool> ExistsAsync(Expression<Func<Stylist, bool>> predicate);
 
         Task<Stylist> CreateAsync(Stylist entity);
 

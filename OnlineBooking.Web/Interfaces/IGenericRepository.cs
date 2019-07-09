@@ -12,9 +12,9 @@ namespace OnlineBooking.Web.Interfaces
 
         Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> predicate);
 
-        Task<T> GetAsync(string id);
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate);
 
-        Task<bool> ExistsAsync(string id);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
 
         Task<T> CreateAsync(T entity);
 
