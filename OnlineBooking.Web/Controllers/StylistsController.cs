@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OnlineBooking.Web.Interfaces;
 using OnlineBooking.Web.Models;
 
@@ -12,24 +14,56 @@ namespace OnlineBooking.Web.Controllers
     [ApiController]
     public class StylistsController : ControllerBase
     {
+        private readonly ILogger<StylistsController> _logger;
         private readonly IStylistService _service;
 
-        public StylistsController(IStylistService service) => _service = service;
+        public StylistsController(ILogger<StylistsController> logger, IStylistService service)
+        {
+            _logger = logger;
+            _service = service;
+        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Stylist>>> GetAllAsync() => (await _service.GetAllAsync()).ToList();
+        public async Task<ActionResult<IEnumerable<Stylist>>> GetAllAsync()
+        {
+            IEnumerable<Stylist> stylists;
+            try
+            {
+                stylists = await _service.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex, "Could not retrieve data.");
+            }
+            return stylists != null && stylists.Any() ? (ActionResult<IEnumerable<Stylist>>)Ok(stylists) : NotFound();
+        }
 
         [HttpGet("{id:length(24)}", Name = "GetStylist")]
         public async Task<ActionResult<Stylist>> GetAsync(string id)
         {
-            var stylist = await _service.GetAsync(id);
-            return stylist != null ? (ActionResult<Stylist>)stylist : NotFound();
+            Stylist stylist;
+            try
+            {
+                stylist = await _service.GetAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex, "Could not retrieve data. Id: {id}", id);
+            }
+            return stylist != null ? (ActionResult<Stylist>)Ok(stylist) : NotFound();
         }
 
         [HttpPost]
         public async Task<ActionResult<Stylist>> CreateAsync(Stylist stylist)
         {
-            await _service.CreateAsync(stylist);
+            try
+            {
+                await _service.CreateAsync(stylist);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex, "Could not create. Stylist: {stylist}", stylist);
+            }
             return CreatedAtRoute("GetStylist", new { id = stylist.Id }, stylist);
         }
 
@@ -38,7 +72,15 @@ namespace OnlineBooking.Web.Controllers
         {
             var exists = await _service.ExistsAsync(id);
             if (!exists) return NotFound();
-            var acknowledged = await _service.UpdateAsync(id, stylist);
+            bool acknowledged;
+            try
+            {
+                acknowledged = await _service.UpdateAsync(id, stylist);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex, "Update not acknowledged. Id: {id}, Stylist: {stylist}", id, stylist);
+            }
             return acknowledged ? NoContent() : new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
@@ -47,8 +89,22 @@ namespace OnlineBooking.Web.Controllers
         {
             var exists = await _service.ExistsAsync(id);
             if (!exists) return NotFound();
-            var acknowledged = await _service.DeleteAsync(id);
+            bool acknowledged;
+            try
+            {
+                acknowledged = await _service.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex, "Delete not acknowledged. Id: {id}", id);
+            }
             return acknowledged ? NoContent() : new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        private StatusCodeResult InternalServerError(Exception ex, string message, params Object[] args)
+        {
+            _logger.LogError(ex, message, args);
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }
 }

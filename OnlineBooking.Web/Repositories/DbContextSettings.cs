@@ -1,6 +1,6 @@
 ﻿using OnlineBooking.Web.Interfaces;
 
-namespace OnlineBooking.Web.Models
+namespace OnlineBooking.Web.Repositories
 {
     public class DbContextSettings : IDbContextSettings
     {

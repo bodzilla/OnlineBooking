@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OnlineBooking.Web.Interfaces;
-using OnlineBooking.Web.Models;
 using OnlineBooking.Web.Repositories;
 using OnlineBooking.Web.Services;
 using Swashbuckle.AspNetCore.Swagger;
